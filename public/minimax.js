@@ -166,13 +166,13 @@
 //		return lowest-value state of of mimimax(eachState, depth-1. minimizingPlayer)
 	let foo;
 	if (currentPlayer === maximizingPlayer) {
-	let foo = max2(possibleStates, function(potentialState){
+	 	foo = max2(possibleStates, function(potentialState){
 //			var potentialState = state.move(move)
 			return - minimax(potentialState, depth-1, maximizingPlayer)
 			//return minimaxAlphaBetaWrapper(potentialState, depth, playerMoving)
 		}).value;
 	} else {
-			let foo = min2(possibleStates, function(potentialState){
+		foo = min2(possibleStates, function(potentialState){
 //			var potentialState = state.move(move)
 			return  minimax(potentialState, depth-1, maximizingPlayer)
 			//return minimaxAlphaBetaWrapper(potentialState, depth, playerMoving)
