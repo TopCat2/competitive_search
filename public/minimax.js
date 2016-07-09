@@ -100,8 +100,8 @@
 	You'll need to pass the tests defined in minimax_specs.js.
 	*/
 	var heuristic = function(state, maximizingPlayer){
-		const weightThree = 50;
-		const weightTwo = 6;
+		const weightThree = 25;
+		const weightTwo = 12;
 		let weight = 0;
 
 		var minimizingPlayer = (maximizingPlayer == 'x') ? 'o' : 'x';
@@ -167,17 +167,16 @@
 	let foo;
 	if (currentPlayer === maximizingPlayer) {
 	 	foo = max2(possibleStates, function(potentialState){
-//			var potentialState = state.move(move)
 			return - minimax(potentialState, depth-1, maximizingPlayer)
 			//return minimaxAlphaBetaWrapper(potentialState, depth, playerMoving)
 		}).value;
 	} else {
 		foo = min2(possibleStates, function(potentialState){
-//			var potentialState = state.move(move)
 			return  minimax(potentialState, depth-1, maximizingPlayer)
 			//return minimaxAlphaBetaWrapper(potentialState, depth, playerMoving)
 		}).value;
 	}
+
 	if (depth >= 2) console.log("minimax is returning", foo, "at level", depth);
 	return foo;
 	}
