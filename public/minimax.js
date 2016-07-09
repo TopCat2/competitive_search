@@ -100,7 +100,7 @@
 	You'll need to pass the tests defined in minimax_specs.js.
 	*/
 	var heuristic = function(state, maximizingPlayer){
-		const weightThree = 17;
+		const weightThree = 50;
 		const weightTwo = 6;
 		let weight = 0;
 
@@ -164,21 +164,36 @@
 
 		// for each state evalauted minimax(iii) return state for min value
 //		return lowest-value state of of mimimax(eachState, depth-1. minimizingPlayer)
-
-	let foo = max(possibleStates, function(potentialState){
+	let foo;
+	if (currentPlayer === maximizingPlayer) {
+	let foo = max2(possibleStates, function(potentialState){
 //			var potentialState = state.move(move)
-			return - minimax(potentialState, depth-1, minimizingPlayer)
+			return - minimax(potentialState, depth-1, maximizingPlayer)
 			//return minimaxAlphaBetaWrapper(potentialState, depth, playerMoving)
 		}).value;
-	console.log("minimax is returning", foo, "at level", depth);
+	} else {
+			let foo = min2(possibleStates, function(potentialState){
+//			var potentialState = state.move(move)
+			return  minimax(potentialState, depth-1, maximizingPlayer)
+			//return minimaxAlphaBetaWrapper(potentialState, depth, playerMoving)
+		}).value;
+	}
+	if (depth >= 2) console.log("minimax is returning", foo, "at level", depth);
 	return foo;
 	}
 
+						// Integers (moves), function over all potential states
 	var max2 = function(arr, func){
 		return arr.reduce(function(tuple, cur, index){
 			var value = func(cur)
 			return (tuple.value >= value) ? tuple : {element: cur, value: value};
-		},{element: arr[0], value: func(arr[0])}).value
+		},{element: arr[0], value: func(arr[0])});
+	}
+	var min2 = function(arr, func){
+		return arr.reduce(function(tuple, cur, index){
+			var value = func(cur)
+			return (tuple.value <= value) ? tuple : {element: cur, value: value};
+		},{element: arr[0], value: func(arr[0])});
 	}
 
 	/* minimaxAlphaBetaWrapper is a pre-written function, but it will not work
