@@ -56,7 +56,7 @@
 			var potentialState = state.move(move)
 			return minimax(potentialState, depth, playerMoving)
 			//return minimaxAlphaBetaWrapper(potentialState, depth, playerMoving)
-		});
+		}).element;
 		// The guts of the make-move function.
 		// The function max(arr, func) returns the element
 		// from the array which gives the highest value
@@ -66,11 +66,12 @@
 	}
 
 	/*Max: Ancillary function.*/
+					// Integers (moves), function over all potential states
 	var max = function(arr, func){
 		return arr.reduce(function(tuple, cur, index){
 			var value = func(cur)
 			return (tuple.value >= value) ? tuple : {element: cur, value: value};
-		},{element: arr[0], value: func(arr[0])}).element;
+		},{element: arr[0], value: func(arr[0])});
 	}
 
 	/*
@@ -99,6 +100,9 @@
 	You'll need to pass the tests defined in minimax_specs.js.
 	*/
 	var heuristic = function(state, maximizingPlayer){
+		const weightThree = 17;
+		const weightTwo = 6;
+		let weight = 0;
 
 		var minimizingPlayer = (maximizingPlayer == 'x') ? 'o' : 'x';
 		//This is how you can retrieve the minimizing player.
@@ -107,7 +111,22 @@
         //An example 
 
         //Your code here.  Don't return random, obviously.
-		return Math.random()
+		if (state.isDraw()) return 0;
+		if (state.someoneWon()) {
+			if (state.winner() === maximizingPlayer) return 100;
+			else return -100;
+		}
+		let  minThrees = state.numLines(3, minimizingPlayer);
+		let  maxThrees = state.numLines(3, maximizingPlayer);
+		weight += (maxThrees - minThrees) * weightThree;
+
+		let  minTwos = state.numLines(2, minimizingPlayer);
+		let  maxTwos = state.numLines(2, maximizingPlayer);
+		weight += (maxTwos - minTwos) * weightTwo;
+
+		if (weight > 90) weight = 90;
+		if (weight < -90) weight = -90;
+		return weight;
 	}
 
 
@@ -139,10 +158,28 @@
 		var possibleStates = state.nextStates();
 		var currentPlayer = state.nextMovePlayer;
 		//Your code here.
-		return Math.random();
+		if (depth === 0 || (possibleStates.length < 1)) {
+			return heuristic(state, maximizingPlayer);
+		}
+
+		// for each state evalauted minimax(iii) return state for min value
+//		return lowest-value state of of mimimax(eachState, depth-1. minimizingPlayer)
+
+	let foo = max(possibleStates, function(potentialState){
+//			var potentialState = state.move(move)
+			return - minimax(potentialState, depth-1, minimizingPlayer)
+			//return minimaxAlphaBetaWrapper(potentialState, depth, playerMoving)
+		}).value;
+	console.log("minimax is returning", foo, "at level", depth);
+	return foo;
 	}
 
-
+	var max2 = function(arr, func){
+		return arr.reduce(function(tuple, cur, index){
+			var value = func(cur)
+			return (tuple.value >= value) ? tuple : {element: cur, value: value};
+		},{element: arr[0], value: func(arr[0])}).value
+	}
 
 	/* minimaxAlphaBetaWrapper is a pre-written function, but it will not work
 	   unless you fill in minimaxAB within it.
